@@ -20,10 +20,10 @@ def send_email(title, content, receivers):
     message['Subject'] = title
 
     try:
-        # smtpObj = smtplib.SMTP_SSL(MAIL_HOST, 465)  # 启用SSL发信, 端口一般是465
-        smtpObj = smtplib.SMTP(MAIL_HOST, 587)  # 启用SSL发信, 端口一般是465
-        smtpObj.ehlo()
-        smtpObj.starttls()
+        smtpObj = smtplib.SMTP_SSL(MAIL_HOST, 465)  # 启用SSL发信, 端口一般是465
+        # smtpObj = smtplib.SMTP(MAIL_HOST, 587)  # 启用SSL发信, 端口一般是465
+        # smtpObj.ehlo()
+        # smtpObj.starttls()
         smtpObj.login(MAIL_USER, MAIL_PASS)  # 登录验证
         smtpObj.sendmail(MAIL_SENDER, receivers, message.as_string())  # 发送
         print("mail has been send successfully.")
