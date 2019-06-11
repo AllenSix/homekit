@@ -11,12 +11,12 @@ from email.header import Header
 from email.mime.text import MIMEText
 
 # 第三方 SMTP 服务
-mail_host = "smtp-mail.outlook.com"  # SMTP服务器
-mail_user = "Sundries_app@outlook.com"  # 用户名
-mail_pass = "19871024Mrf"  # 授权密码，非登录密码
+mail_host = "smtp.126.com"  # SMTP服务器
+mail_user = "nana_app@126.com"  # 用户名
+mail_pass = "19871024mrfsq"  # 授权密码，非登录密码
 
-sender = "Sundries_app@outlook.com"
-receivers = "zxh@zqf.com.cn"
+sender = "nana_app@126.com"
+receivers = "117821611@qq.com"
 
 content = '验证码1234'
 title = '验证码邮件'  # 邮件主题
@@ -29,9 +29,10 @@ def sendEmail():
     message['Subject'] = title
 
     try:
-        smtpObj = smtplib.SMTP(mail_host, 587)  # 启用SSL发信, 端口一般是465
-        smtpObj.ehlo()
-        smtpObj.starttls()
+        # smtpObj = smtplib.SMTP(mail_host, 587)  # 启用SSL发信, 端口一般是465
+        # smtpObj.ehlo()
+        # smtpObj.starttls()
+        smtpObj = smtplib.SMTP_SSL(mail_host, 465)
         smtpObj.login(mail_user, mail_pass)  # 登录验证
         smtpObj.sendmail(sender, receivers, message.as_string())  # 发送
         print("mail has been send successfully.")

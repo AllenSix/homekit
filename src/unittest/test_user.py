@@ -25,8 +25,8 @@ class TestUser(TestCase):
 
         logging.basicConfig(level=logging.DEBUG)
 
-    def test_send_code_by_email(self):
-        ret = cloudfunc.run('sendCodeByEmail', username="zxh@zqf.com.cn")
+    def test_sen_code_by_email(self):
+        ret = cloudfunc.run('sendCodeByEmail', username="117821611@qq.com")
         print(ret)
         assert (type(ret) == dict)
 

@@ -32,7 +32,7 @@ def send_code_by_email(username=""):
     user.checkCode = str(random.randint(1000, 9999))
     user.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
     db.session.commit()
-    send_email("homekit验证码邮件", "您的验证码为{}".format(user.checkCode), username)
+    send_email("NANA验证码邮件", "您的验证码为{}".format(user.checkCode), username)
     return jsonify({"result": {"data": {}, "error_code": 0, "msg": "邮件发送成功"}})
 
 

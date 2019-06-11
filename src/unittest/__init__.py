@@ -8,4 +8,4 @@
 import os
 
 # LEANCLOUD_API_SERVER = os.getenv("LEANCLOUD_API_SERVER", "http://127.0.0.1:5000")
-LEANCLOUD_API_SERVER = os.getenv("LEANCLOUD_API_SERVER", "http://testsp1.scqkxx.com")
+LEANCLOUD_API_SERVER = os.getenv("LEANCLOUD_API_SERVER", "http://nana.medpixs.com:19000")
