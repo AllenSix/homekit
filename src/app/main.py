@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 
 from src.app.config import SQLALCHEMY_DATABASE_URI
@@ -36,6 +36,11 @@ def after_request(response):
                          'X-LC-Session,X-LC-Id,X-LC-Ua,X-LC-Sign,Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
+
+
+@app.before_request
+def before_action():
+    logging.info('{},{},{}'.format(os.getpid(), request.method, request.path))
 
 
 if __name__ == '__main__':
