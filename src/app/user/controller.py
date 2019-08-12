@@ -68,7 +68,7 @@ def register(first_name="", last_name="", username="", email="", check_code="", 
     user.createdAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
     user.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
     db.session.commit()
-    ret = create_group(user.sessionToken, "未命名", False, "", "未填写备注", return_type="json")
+    ret = create_group(user.sessionToken, "未命名群组", False, "", "未填写备注", return_type="json")
     user.defaultGroupId = ret["result"]["data"]["groupId"]
     db.session.commit()
     return jsonify({"result": {
