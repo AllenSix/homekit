@@ -154,6 +154,7 @@ def query_goods():
     params = util.parse_get_where_params()
     skip = int(request.args.get('skip', '0'))
     limit = int(request.args.get('limit', '20'))
+    logging.info(params)
     return controller.query_goods(session_token, skip, limit, params)
 
 
