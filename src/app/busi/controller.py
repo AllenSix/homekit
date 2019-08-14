@@ -297,7 +297,10 @@ def query_goods(session_token, skip, limit, params):
         query = query.filter(Goods.isDisable == 0)
     # 私密性
     query = query.filter(or_(
-        Goods.isPublic == 1, and_(
+        and_(
+            Goods.isPublic == 1,
+            Goods.isDisable == 0),
+        and_(
             Goods.isPublic == 0,
             Goods.belongUserId == user_id)
     ))
