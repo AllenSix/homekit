@@ -7,11 +7,11 @@
 # @Software: PyCharm
 
 from flask import jsonify
-from sqlalchemy import exists, not_, and_, desc, or_
+from sqlalchemy import exists, not_, and_, or_
 
 from src.app.group.modes import *
 from src.app.main import db
-from src.app.models.model import User, Space, Position, Group, Goods, Notes, Marks, News, Reads
+from src.app.models.model import User, Space, Position, Goods, Notes, Marks, News, Reads
 from src.app.util import util
 from src.app.util.mail import APP_SECRET
 
@@ -289,6 +289,8 @@ def query_goods(session_token, skip, limit, params):
         query = query.filter(Goods.type == params["type"])
     if "objectId" in params:
         query = query.filter(Goods.id == params["objectId"])
+    if "isPublic" in params:
+        query = query.filter(Goods.isPublic == params["isPublic"])
     if "isDisable" in params:
         query = query.filter(Goods.isDisable == params["isDisable"])
     else:
