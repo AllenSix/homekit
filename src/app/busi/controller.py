@@ -301,14 +301,17 @@ def query_goods(session_token, skip, limit, params):
         query = query.filter(Goods.isDisable == params["isDisable"])
     else:
         query = query.filter(Goods.isDisable == 0)
-    # 私密性
+    # 私密性 只可以查看用户默认群组内部非用户的公开物品
     query = query.filter(or_(
         and_(
             Goods.isPublic == 1,
-            Goods.isDisable == 0),
+            Goods.isDisable == 0,
+            Goods.belongGroupId == user.defaultGroupId
+        ),
         and_(
             Goods.isPublic == 0,
-            Goods.belongUserId == user_id)
+            Goods.belongUserId == user_id
+        )
     ))
     query = query.order_by(desc(Goods.id)).limit(limit).offset(skip).all()
     results = []
