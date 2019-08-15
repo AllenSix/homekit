@@ -187,8 +187,8 @@ def query_position(session_token, skip, limit, params):
                         "spaceId": data.spaceId,
                         "belongUserName": user.lastName,
                         "spaceName": space.name,
-                        "goodsNum": get_goods_num_in_position(data.spaceId),
-                        "membersNum": get_members_num_in_position(data.spaceId),
+                        "goodsNum": get_goods_num_in_position(data.id),
+                        "membersNum": get_members_num_in_position(data.id),
                         "isPublic": data.isPublic,
                         "createdAt": util.get_iso8601_from_dt(data.createdAt),
                         "updatedAt": util.get_iso8601_from_dt(data.updatedAt), })
