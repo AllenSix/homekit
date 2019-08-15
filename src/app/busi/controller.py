@@ -225,6 +225,12 @@ def update_position(session_token, todo_id, name, is_public, avatar, coordinate,
     if is_disable is not None:
         position.isDisable = is_disable
     position.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+    if is_disable == 1:
+        # 删除位置时同步删除位置下的物品
+        goods = Goods.query.filter_by(positionId=todo_id, isDisable=0).all()
+        for good in goods:
+            good.isDisable = 1
+            good.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
     db.session.commit()
     return jsonify({"result": {"data": {}, "error_code": 0, "msg": "项目修改成功"}})
 
