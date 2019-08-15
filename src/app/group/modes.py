@@ -11,9 +11,20 @@ from src.app.main import db
 from src.app.models.model import Position, Goods, Marks, News, Notes
 
 
-def get_position_num_in_space(space_id=-1):
-    return db.session.query(Position).filter(Position.spaceId == space_id).filter(
-        Position.isDisable == 0).with_entities(func.count(Position.id)).scalar()
+def get_position_num_in_space(space_id=-1, user_default_group_id=-1, user_id=-1):
+    return db.session.query(Position).filter(Position.spaceId == space_id, Position.isDisable == 0).filter(
+        or_(
+            and_(
+                Position.isPublic == 1,
+                Position.isDisable == 0,
+                Position.belongGroupId == user_default_group_id
+            ),
+            and_(
+                Position.isPublic == 0,
+                Position.belongUserId == user_id
+            )
+        )
+    ).with_entities(func.count(Position.id)).scalar()
 
 
 def get_goods_num_in_space(space_id=-1, user_default_group_id=-1, user_id=-1):
