@@ -5,7 +5,7 @@
 # @Site    : 
 # @File    : modes.py
 # @Software: PyCharm
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, or_, and_
 
 from src.app.main import db
 from src.app.models.model import Position, Goods, Marks, News, Notes
@@ -16,9 +16,20 @@ def get_position_num_in_space(space_id=-1):
         Position.isDisable == 0).with_entities(func.count(Position.id)).scalar()
 
 
-def get_goods_num_in_space(space_id=-1):
-    return db.session.query(Goods).filter(Goods.spaceId == space_id).filter(
-        Goods.isDisable == 0).with_entities(func.count(Goods.id)).scalar()
+def get_goods_num_in_space(space_id=-1, user_default_group_id=-1, user_id=-1):
+    return db.session.query(Goods).filter(Goods.spaceId == space_id, Goods.isDisable == 0).filter(
+        or_(
+            and_(
+                Goods.isPublic == 1,
+                Goods.isDisable == 0,
+                Goods.belongGroupId == user_default_group_id
+            ),
+            and_(
+                Goods.isPublic == 0,
+                Goods.belongUserId == user_id
+            )
+        )
+    ).with_entities(func.count(Goods.id)).scalar()
 
 
 def get_members_num_in_space(space_id=-1):
@@ -32,9 +43,20 @@ def get_members_num_in_space(space_id=-1):
     return len(user_id_set)
 
 
-def get_goods_num_in_position(position_id=-1):
-    return db.session.query(Goods).filter(Goods.positionId == position_id).filter(
-        Goods.isDisable == 0).with_entities(func.count(Goods.id)).scalar()
+def get_goods_num_in_position(position_id=-1, user_default_group_id=-1, user_id=-1):
+    return db.session.query(Goods).filter(Goods.positionId == position_id, Goods.isDisable == 0).filter(
+        or_(
+            and_(
+                Goods.isPublic == 1,
+                Goods.isDisable == 0,
+                Goods.belongGroupId == user_default_group_id
+            ),
+            and_(
+                Goods.isPublic == 0,
+                Goods.belongUserId == user_id
+            )
+        )
+    ).with_entities(func.count(Goods.id)).scalar()
 
 
 def get_members_num_in_position(position_id=-1):

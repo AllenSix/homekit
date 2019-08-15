@@ -7,7 +7,7 @@
 # @Software: PyCharm
 
 from flask import jsonify
-from sqlalchemy import exists, not_, and_, or_
+from sqlalchemy import exists, not_
 
 from src.app.group.modes import *
 from src.app.main import db
@@ -78,7 +78,7 @@ def query_space(session_token, skip, limit, params):
                         "belongUserName": user.lastName,
                         "belongGroupId": data.belongGroupId,
                         "positionNum": get_position_num_in_space(data.id),
-                        "goodsNum": get_goods_num_in_space(data.id),
+                        "goodsNum": get_goods_num_in_space(data.id, user.defaultGroupId, user_id),
                         "membersNum": get_members_num_in_space(data.id),
                         "isPublic": data.isPublic,
                         "createdAt": util.get_iso8601_from_dt(data.createdAt),
@@ -187,7 +187,7 @@ def query_position(session_token, skip, limit, params):
                         "spaceId": data.spaceId,
                         "belongUserName": user.lastName,
                         "spaceName": space.name,
-                        "goodsNum": get_goods_num_in_position(data.id),
+                        "goodsNum": get_goods_num_in_position(data.id, user.defaultGroupId, user_id),
                         "membersNum": get_members_num_in_position(data.id),
                         "isPublic": data.isPublic,
                         "createdAt": util.get_iso8601_from_dt(data.createdAt),
@@ -655,7 +655,7 @@ def query_news(session_token, skip, limit, params):
     results = []
     for data, user, space, position in query:
         if data.type == 4:
-            content = "# 共{}个物品 #".format(get_goods_num_in_position(data.positionId))
+            content = "# 共{}个物品 #".format(get_goods_num_in_position(data.positionId, user.defaultGroupId, user_id))
         else:
             content = data.content
         results.append({"objectId": data.id,
@@ -736,7 +736,7 @@ def fix_search(session_token, keyword, belong_group_id):
                               "belongUserName": user.lastName,
                               "belongGroupId": data.belongGroupId,
                               "positionNum": get_position_num_in_space(data.id),
-                              "goodsNum": get_goods_num_in_space(data.id),
+                              "goodsNum": get_goods_num_in_space(data.id, user.defaultGroupId, user_id),
                               "membersNum": get_members_num_in_space(data.id),
                               "isPublic": data.isPublic,
                               "createdAt": util.get_iso8601_from_dt(data.createdAt),
@@ -764,7 +764,7 @@ def fix_search(session_token, keyword, belong_group_id):
                                  "spaceId": data.spaceId,
                                  "belongUserName": user.lastName,
                                  "spaceName": space.name,
-                                 "goodsNum": get_goods_num_in_position(data.spaceId),
+                                 "goodsNum": get_goods_num_in_position(data.id, user.defaultGroupId, user_id),
                                  "membersNum": get_members_num_in_position(data.spaceId),
                                  "isPublic": data.isPublic,
                                  "createdAt": util.get_iso8601_from_dt(data.createdAt),
