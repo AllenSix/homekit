@@ -5,7 +5,6 @@
 # @Site    : 
 # @File    : views.py
 # @Software: PyCharm
-import json
 import random
 
 from flask import jsonify
@@ -43,7 +42,8 @@ def query_email(username=""):
     :return:
     """
     user = User.query.filter_by(username=username).first()
-    if user is not None:
+    # 密码不为空才判断为成功注册
+    if user is not None and user.password:
         return jsonify({"result": {"error_code": 1, "msg": '邮箱已存在'}}), 200
     return jsonify({"result": {"data": {}, "error_code": 0, "msg": "邮箱不存在"}})
 
