@@ -29,6 +29,7 @@ def send_code_by_email(username=""):
     if user is None:
         user = User(username=username, email=username)
         db.session.add(user)
+        user.codeExpiredAt = 0
         user.createdAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
 
     # 判断发送邮件间隔
