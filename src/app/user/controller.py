@@ -5,7 +5,9 @@
 # @Site    : 
 # @File    : views.py
 # @Software: PyCharm
+
 import random
+import time
 
 from flask import jsonify
 
@@ -28,7 +30,13 @@ def send_code_by_email(username=""):
         user = User(username=username, email=username)
         db.session.add(user)
         user.createdAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+
+    # 判断发送邮件间隔
+    if user.codeExpiredAt > int(time.time()):
+        return jsonify({"result": {"error_code": 1, "msg": '连续发送邮件必须间隔一分钟'}}), 200
+
     user.checkCode = str(random.randint(1000, 9999))
+    user.codeExpiredAt = int(time.time()) + 60
     user.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
     db.session.commit()
     send_email("NANA验证码邮件", "您的验证码为{}".format(user.checkCode), username)
@@ -58,6 +66,7 @@ def register(first_name="", last_name="", username="", email="", check_code="", 
     if user.checkCode != check_code:
         return jsonify({"result": {"error_code": 1, "msg": '验证码不正确'}}), 200
     user.checkCode = ""
+    user.codeExpiredAt = 0
     if user.password is not None:
         return jsonify({"result": {"error_code": 1, "msg": '用户已注册'}}), 200
     user.firstName = first_name
@@ -85,6 +94,7 @@ def reset_password(username="", check_code="", password=""):
     if user.checkCode != check_code:
         return jsonify({"result": {"error_code": 1, "msg": '验证码不正确'}}), 200
     user.checkCode = ""
+    user.codeExpiredAt = 0
     if user.password is None:
         return jsonify({"result": {"error_code": 1, "msg": '用户尚未注册'}}), 200
     user.password = util.get_md5(password)
@@ -119,6 +129,7 @@ def pack_users_me(user):
         del user_dict['password']
     del user_dict["_sa_instance_state"]
     del user_dict["checkCode"]
+    del user_dict["codeExpiredAt"]
     user_dict['updatedAt'] = util.get_iso8601_from_dt(user_dict['updatedAt'])
     user_dict['createdAt'] = util.get_iso8601_from_dt(user_dict['createdAt'])
     print(user_dict)

@@ -21,6 +21,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     checkCode = db.Column(db.String(4), nullable=True)
+    codeExpiredAt = db.Column(db.Integer, default=0)
     password = db.Column(db.String(256), nullable=True)
     defaultGroupId = db.Column(db.Integer, nullable=True)
     avatar = db.Column(db.String(256), nullable=True)
