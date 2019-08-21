@@ -34,7 +34,7 @@ def send_code_by_email(username=""):
 
     # 判断发送邮件间隔
     if user.codeExpiredAt > int(time.time()):
-        return jsonify({"result": {"error_code": 1, "msg": '您操作太快了，请稍后重试'}}), 200
+        return jsonify({"result": {"error_code": 1, "msg": '连续发送邮件必须间隔一分钟'}}), 200
 
     user.checkCode = str(random.randint(1000, 9999))
     user.codeExpiredAt = int(time.time()) + 60
