@@ -206,6 +206,9 @@ def update_group_user(session_token, todo_id, is_disable, is_audit):
         return jsonify({"result": {"error_code": 1, "msg": 'miss group_user'}}), 200
     if is_disable is not None:
         group_user.isDisable = is_disable
+        # 如果是退出群组增加判断 退出群组和用户默认群组一致的话 则置空用户的默认群组
+        if int(is_disable) != 0 and user.defaultGroupId == group_user.groupId:
+            user.defaultGroupId = 0
     if is_audit is not None:
         print(is_audit)
         print(group_user.isAudit)
