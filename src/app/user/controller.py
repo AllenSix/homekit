@@ -202,4 +202,5 @@ def quick_register():
     user.defaultGroupId = ret["result"]["data"]["groupId"]
     db.session.commit()
     return jsonify({"result": {
-        "data": {"sessionToken": user.sessionToken}, "error_code": 0, "msg": "注册成功"}})
+        "data": {"sessionToken": user.sessionToken, "username": username, "password": "123456"},
+        "error_code": 0, "msg": "注册成功"}})
