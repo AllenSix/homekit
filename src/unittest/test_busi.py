@@ -14,7 +14,7 @@ from leancloud import cloudfunc
 
 from src.unittest import LEANCLOUD_API_SERVER
 
-session_token = "eyJhbGciOiJIUzI1NiIsImlhdCI6MTUzMDY4MjUxMSwiZXhwIjoxNTM0MjgyNTExfQ.IjQi.MG81MLUELCXuDbPfmqAzpEBzdXLu7dGlPywaa__-16E"
+session_token = "eyJhbGciOiJIUzUxMiIsImlhdCI6MTU2NTg1MTgxMywiZXhwIjoxNTY5NDUxODEzfQ.IjI0Ig.XP_WrgbzbltCxo_b1YsM9AX7fdu5tSKFsQAeOa15twagbiMUpC2b3HgGONENfNhfDKEzfF90XCuLsQuQStYJNQ"
 
 
 class TestBusi(TestCase):

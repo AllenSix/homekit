@@ -176,3 +176,30 @@ def login(username="", password=""):
     user.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
     db.session.commit()
     return pack_users_me(user)
+
+
+def quick_register():
+    """
+    快速注册接口
+    """
+    while True:
+        username = util.generate_new_user()
+        if username.startswith('0'):
+            continue
+        # 防止重名
+        count = User.query.filter_by(username=username).count()
+        if count == 0:
+            break
+    user = User(username=username, password=util.get_md5('123456'), email=username)
+    db.session.add(user)
+    db.session.flush()
+    user.codeExpiredAt = 0
+    user.createdAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+    user.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+    user.sessionToken = util.generate_auth_token(APP_SECRET, user.id)
+    db.session.commit()
+    ret = create_group(user.sessionToken, "未命名群组", False, "", "未填写备注", return_type="json")
+    user.defaultGroupId = ret["result"]["data"]["groupId"]
+    db.session.commit()
+    return jsonify({"result": {
+        "data": {"sessionToken": user.sessionToken}, "error_code": 0, "msg": "注册成功"}})

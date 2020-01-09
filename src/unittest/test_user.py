@@ -25,8 +25,13 @@ class TestUser(TestCase):
 
         logging.basicConfig(level=logging.DEBUG)
 
-    def test_sen_code_by_email(self):
-        ret = cloudfunc.run('sendCodeByEmail', username="117821611@qq.com")
+    def test_send_code_by_email(self):
+        ret = cloudfunc.run('sendCodeByEmail', username="csf71106410@163.com")
+        print(ret)
+        assert (type(ret) == dict)
+
+    def test_query_email(self):
+        ret = cloudfunc.run('queryEmail', username="drscheng@hotmail.com")
         print(ret)
         assert (type(ret) == dict)
 
@@ -57,5 +62,9 @@ class TestUser(TestCase):
 
     def test_login(self):
         user = leancloud.User()
-        user.login("zxh@zqf.com.cn", "123456")
+        user.login("1158737828@qq.com", "888888")
         print(user.dump())
+
+    def test_quick_register(self):
+        ret = cloudfunc.run('quickRegister')
+        print(ret)

@@ -57,6 +57,16 @@ def register():
                                check_code=check_code, password=password, avatar=avatar)
 
 
+@user.route('/functions/quickRegister', methods=['POST', ])
+def quick_register():
+    """
+    快速注册接口
+    :return:
+    """
+
+    return controller.quick_register()
+
+
 @user.route('/users/me', methods=['GET', 'POST'])
 def users_me():
     """

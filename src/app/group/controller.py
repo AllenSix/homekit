@@ -29,7 +29,7 @@ def create_group(session_token, name, is_public, avatar, desc, return_type="json
     user_id = util.review_auth_token(APP_SECRET, session_token)
     user = User.query.filter_by(id=user_id).first()
     if user is None:
-        return jsonify({"result": {"error_code": 1, "msg": 'miss userk'}}), 200
+        return jsonify({"result": {"error_code": 1, "msg": 'miss user'}}), 200
     group = Group(name=name, avatar=avatar, desc=desc, belongUserId=user_id, isPublic=is_public)
     group.createdAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
     group.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())

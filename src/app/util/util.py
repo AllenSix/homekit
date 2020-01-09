@@ -13,11 +13,9 @@ import json
 import logging
 import os
 import random
-
-from datetime import datetime, timedelta
-import time
-
 import re
+import time
+from datetime import datetime, timedelta
 
 from flask import request
 from itsdangerous import (TimedJSONWebSignatureSerializer
@@ -246,6 +244,32 @@ def parse_get_where_params():
 
 def to_dict(self):
     return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
+
+
+def createRandomStr(length=32):
+    """产生随机字符串，不长于32位"""
+    chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+    strs = []
+    for x in range(length):
+        strs.append(chars[random.randrange(0, len(chars))])
+    return "".join(strs)
+
+
+def createRandomNumber(length=6):
+    """产生随机字符串，不长于32位"""
+    chars = "1234567890"
+    strs = []
+    for x in range(length):
+        strs.append(chars[random.randrange(0, len(chars))])
+    return "".join(strs)
+
+
+def generate_new_user():
+    """
+    生成随机新用户
+    :return:
+    """
+    return createRandomNumber(6)
 
 
 if __name__ == '__main__':
