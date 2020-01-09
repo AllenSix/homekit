@@ -11,7 +11,7 @@ from sqlalchemy import exists, not_
 
 from src.app.group.modes import *
 from src.app.main import db
-from src.app.models.model import User, Space, Position, Goods, Notes, Marks, News, Reads
+from src.app.models.model import User, Space, Position, Goods, Notes, Marks, News, Reads, Advert
 from src.app.util import util
 from src.app.util.mail import APP_SECRET
 
@@ -806,3 +806,100 @@ def fix_search(session_token, keyword, belong_group_id):
     return jsonify({"result": {
         "data": {"space_results": space_results, "position_results": position_results, "goods_results": goods_results},
         "error_code": 0, "msg": "查询成功"}})
+
+
+def create_advert(sn, type, title, platform, desc, url, thumbnail):
+    """
+    创建运营位
+    :param sn:
+    :param type:
+    :param title:
+    :param platform:
+    :param desc:
+    :param url:
+    :param thumbnail:
+    :return:
+    """
+    advert = Advert(sn=sn, type=type, title=title, platform=platform, desc=desc, url=url, thumbnail=thumbnail,
+                    isDisable=0)
+    advert.createdAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+    advert.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+    db.session.add(advert)
+    db.session.commit()
+
+    return jsonify({"objectId": str(advert.id)})
+
+
+def query_advert(skip, limit, params):
+    """
+    查询运营位
+    :param params:
+    :param limit:
+    :param skip:
+    :param session_token:
+    :return:
+    """
+
+    query = db.session.query(Advert).filter(Advert.isDisable == 0)
+    if params is None:
+        params = {}
+    if "type" in params:
+        query = query.filter(Advert.type == params["type"])
+    if "platform" in params:
+        query = query.filter(Advert.platform == params["platform"])
+    if "sn" in params:
+        query = query.filter(Advert.sn == params["sn"])
+    query = query.order_by(desc(Advert.id)).limit(limit).offset(skip).all()
+    results = []
+    for data in query:
+        results.append({
+            "objectId": data.id,
+            "sn": data.sn,
+            "type": data.type,
+            "title": data.title,
+            "platform": data.platform,
+            "desc": data.desc,
+            "url": data.url,
+            "thumbnail": data.thumbnail,
+            "createdAt": util.get_iso8601_from_dt(data.createdAt),
+            "updatedAt": util.get_iso8601_from_dt(data.updatedAt)
+        })
+    return jsonify({"results": results})
+
+
+def update_advert(todo_id, sn, type, title, platform, desc, url, thumbnail, is_disable):
+    """
+    更新运营位
+    :param todo_id:
+    :param sn:
+    :param type:
+    :param title:
+    :param platform:
+    :param desc:
+    :param url:
+    :param thumbnail:
+    :param is_disable:
+    :return:
+    """
+    advert = Advert.query.filter_by(id=todo_id).first()
+    if advert is None:
+        return jsonify({"result": {"error_code": 1, "msg": 'miss marks'}}), 200
+    if sn:
+        advert.sn = sn
+    if type:
+        advert.type = type
+    if title:
+        advert.title = title
+    if platform:
+        advert.platform = platform
+    if desc:
+        advert.desc = desc
+    if url:
+        advert.url = url
+    if thumbnail:
+        advert.thumbnail = thumbnail
+    if is_disable is not None:
+        advert.isDisable = is_disable
+    advert.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+    db.session.commit()
+    return jsonify({"result": {"data": {}, "error_code": 0, "msg": "项目修改成功"}})

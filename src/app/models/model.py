@@ -5,8 +5,6 @@
 # @Site    : 
 # @File    : model.py
 # @Software: PyCharm
-from sqlalchemy import BOOLEAN
-from sqlalchemy.orm import relationship
 
 from src.app.main import db
 
@@ -203,3 +201,23 @@ class Reads(db.Model):
 
     def __repr__(self):
         return '<News %r>' % self.id
+
+
+class Advert(db.Model):
+    """
+    运营位表
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    sn = db.Column(db.String(64), nullable=True)
+    title = db.Column(db.String(128), nullable=True)
+    type = db.Column(db.String(64), nullable=True)
+    platform = db.Column(db.String(32), nullable=True)
+    desc = db.Column(db.String(512), nullable=True)
+    url = db.Column(db.String(256), nullable=True)
+    thumbnail = db.Column(db.String(256), nullable=True)
+    isDisable = db.Column(db.SmallInteger, default=0, nullable=False)
+    createdAt = db.Column(db.DateTime, nullable=True)
+    updatedAt = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return '<Advert %r>' % self.id

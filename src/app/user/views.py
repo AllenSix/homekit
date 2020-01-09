@@ -67,6 +67,26 @@ def quick_register():
     return controller.quick_register()
 
 
+@user.route('/functions/registerWithUserName', methods=['POST', ])
+def register_with_username():
+    """
+    账户注册接口
+    :return:
+    """
+    username = request.json.get('username', "")
+    if username == "":
+        return jsonify({"result": {"error_code": 1, "msg": 'miss username'}}), 200
+    password = request.json.get('password', "")
+    if password == "":
+        return jsonify({"result": {"error_code": 1, "msg": 'miss password'}}), 200
+    first_name = request.json.get('firstName', "")
+    last_name = request.json.get('lastName', "")
+    email = request.json.get('email', "")
+    avatar = request.json.get('avatar', "")
+    return controller.register_with_username(first_name=first_name, last_name=last_name, username=username, email=email,
+                                             password=password, avatar=avatar)
+
+
 @user.route('/users/me', methods=['GET', 'POST'])
 def users_me():
     """

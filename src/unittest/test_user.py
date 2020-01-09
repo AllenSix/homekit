@@ -68,3 +68,7 @@ class TestUser(TestCase):
     def test_quick_register(self):
         ret = cloudfunc.run('quickRegister')
         print(ret)
+
+    def test_register_with_username(self):
+        ret = cloudfunc.run('registerWithUserName', username='chensf3', password='123456', email='chensf3')
+        print(ret)

@@ -204,3 +204,37 @@ def quick_register():
     return jsonify({"result": {
         "data": {"sessionToken": user.sessionToken, "username": username, "password": "123456"},
         "error_code": 0, "msg": "注册成功"}})
+
+
+def register_with_username(first_name="", last_name="", username="", email="", password="", avatar=""):
+    """
+    账户注册接口
+    :param first_name:
+    :param last_name:
+    :param username:
+    :param email:
+    :param password:
+    :param avatar:
+    :return:
+    """
+    user = User.query.filter_by(username=username).first()
+    if user:
+        return jsonify({"result": {"error_code": 1, "msg": '账户已经存在'}}), 200
+    user = User(username=username, email=email)
+    # 先获取用户id
+    db.session.add(user)
+    db.session.flush()
+    user.firstName = first_name
+    user.lastName = last_name
+    user.checkCode = ""
+    user.codeExpiredAt = 0
+    user.password = util.get_md5(password)
+    user.avatar = avatar
+    user.sessionToken = util.generate_auth_token(APP_SECRET, user.id)
+    user.createdAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+    user.updatedAt = util.get_mysql_datetime_from_iso(util.get_iso8601())
+    db.session.commit()
+    ret = create_group(user.sessionToken, "未命名群组", False, "", "未填写备注", return_type="json")
+    user.defaultGroupId = ret["result"]["data"]["groupId"]
+    db.session.commit()
+    return jsonify({"result": {"data": {"sessionToken": user.sessionToken}, "error_code": 0, "msg": "注册成功"}})

@@ -433,3 +433,60 @@ def fix_search():
     if belong_group_id == "":
         return jsonify({"result": {"error_code": 1, "msg": 'miss belongGroupId'}}), 200
     return controller.fix_search(session_token, keyword, belong_group_id)
+
+
+@busi.route('/classes/Advert', methods=['POST', ])
+def create_advert():
+    """
+    创建运营位
+    :return:
+    """
+    # session_token = request.headers.get('X-LC-Session', "")
+    # if session_token == "" or session_token is None:
+    #     return jsonify({"result": {"error_code": 1, "msg": 'miss session_token'}}), 200
+    sn = request.json.get('sn', '')
+    if sn == '':
+        return jsonify({"result": {"error_code": 1, "msg": 'miss sn'}}), 200
+    type = request.json.get('type', '')
+    if type == '':
+        return jsonify({"result": {"error_code": 1, "msg": 'miss type'}}), 200
+    title = request.json.get('title', '')
+    platform = request.json.get('platform', '')
+    desc = request.json.get('desc', '')
+    url = request.json.get('url', '')
+    thumbnail = request.json.get('thumbnail', '')
+
+    return controller.create_advert(sn, type, title, platform, desc, url, thumbnail)
+
+
+@busi.route('/classes/Advert', methods=['GET', ])
+def query_advert():
+    """
+    查询运营位
+    :return:
+    """
+    params = util.parse_get_where_params()
+    skip = int(request.args.get('skip', '0'))
+    limit = int(request.args.get('limit', '20'))
+    return controller.query_advert(skip, limit, params)
+
+
+@busi.route('/classes/Advert/<int:todo_id>', methods=['PUT', ])
+def update_advert(todo_id):
+    """
+    更新运营位
+    :return:
+    """
+    sn = request.json.get('sn', '')
+    if sn == '':
+        return jsonify({"result": {"error_code": 1, "msg": 'miss sn'}}), 200
+    type = request.json.get('type', '')
+    if type == '':
+        return jsonify({"result": {"error_code": 1, "msg": 'miss type'}}), 200
+    title = request.json.get('title', '')
+    platform = request.json.get('platform', '')
+    desc = request.json.get('desc', '')
+    url = request.json.get('url', '')
+    thumbnail = request.json.get('thumbnail', '')
+    is_disable = request.json.get('isDisable', None)
+    return controller.update_advert(todo_id, sn, type, title, platform, desc, url, thumbnail, is_disable)

@@ -192,3 +192,36 @@ class TestBusi(TestCase):
         ret = cloudfunc.run('search', keyword="测", belongGroupId="8")
         print(ret)
         assert (type(ret) == dict)
+
+    def test_create_advert(self):
+        Model = leancloud.Object.extend('Advert')
+        obj = Model()
+        obj.set("sn", 'hello')
+        obj.set("title", '运营位标题')
+        obj.set("type", '运营位类型')
+        obj.set("platform", '运营位平台')
+        obj.set("desc", '运营位描述')
+        obj.set("url", 'http://www.baidu.com')
+        obj.set("thumbnail", 'http://www.baidu.com')
+        obj.save()
+
+    def test_query_adverts(self):
+        Model = leancloud.Object.extend('Advert')
+        query = Model.query
+        query.skip(0)
+        query.limit(2)
+        todo_list = query.find()
+        for todo in todo_list:
+            print(todo.dump())
+
+    def test_update_adverts(self):
+        Modle = leancloud.Object.extend('Advert')
+        obj = Modle.create_without_data(1)
+        obj.set("sn", 'hello1')
+        obj.set("title", '运营位标题1')
+        obj.set("type", '运营位类型1')
+        obj.set("platform", '运营位平台1')
+        obj.set("desc", '运营位描述1')
+        obj.set("url", 'http://www.baidu1.com')
+        obj.set("thumbnail", 'http://www.baidu1.com')
+        obj.save()
